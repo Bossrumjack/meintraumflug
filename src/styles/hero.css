@@ -1,0 +1,385 @@
+.mtf-hero {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+}
+
+.mtf-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -3;
+}
+
+.mtf-hero-media-img {
+  animation: kenburns 32s ease-in-out infinite alternate;
+  transform-origin: 58% 42%;
+}
+
+@keyframes kenburns {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1.18) translate3d(-2.2%, -1.4%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mtf-hero-media-img { animation: none; transform: scale(1.06); }
+}
+
+.mtf-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(to bottom, rgba(12,12,15,0.50) 0%, rgba(12,12,15,0) 24%),
+    linear-gradient(to top, rgba(12,12,15,0.88) 0%, rgba(12,12,15,0.30) 36%, rgba(12,12,15,0) 62%);
+}
+
+.mtf-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.34) 100%);
+}
+
+.mtf-hero-body {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mtf-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: rgba(255,255,255,0.80);
+  margin-bottom: 22px;
+}
+
+.mtf-hero-eyebrow::before {
+  content: '';
+  width: 34px;
+  height: 1px;
+  background: var(--brand-red);
+}
+
+.mtf-hero-title {
+  font-size: clamp(44px, 6.4vw, 86px);
+  font-weight: var(--fw-semibold);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin: 0;
+  max-width: 16ch;
+  text-wrap: balance;
+  text-shadow: 0 2px 40px rgba(0,0,0,0.35);
+}
+
+.mtf-hero-sub {
+  margin: 24px 0 0;
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  color: rgba(255,255,255,0.84);
+}
+
+.mtf-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.mtf-hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+  padding: 13px 24px;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background var(--dur-base) var(--ease-standard);
+}
+
+.mtf-hero-ghost:hover { background: rgba(255,255,255,0.18); }
+
+.mtf-play {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  flex: none;
+  background: #fff;
+  color: var(--zinc-950);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  padding-left: 2px;
+}
+
+.mtf-hero-meta {
+  margin-top: 44px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.mtf-hero-meta-group {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.mtf-hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mtf-hero-meta-item .k {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: rgba(255,255,255,0.55);
+}
+
+.mtf-hero-meta-item .v {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.mtf-hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: rgba(255,255,255,0.7);
+}
+
+.mtf-hero-scroll .arrow {
+  animation: nudge 1.8s var(--ease-standard) infinite;
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mtf-hero-scroll .arrow { animation: none; }
+}
+
+.mtf-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  background: var(--surface-inverted);
+  color: var(--text-on-dark);
+  padding: 14px 22px;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xl);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: mtfToast 240ms var(--ease-standard);
+}
+
+.mtf-toast::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--brand-red);
+}
+
+/* Skip link */
+.mtf-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 200;
+  background: var(--surface-page);
+  color: var(--text-strong);
+  padding: 10px 18px;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  box-shadow: var(--shadow-lg), var(--ring-hairline);
+  transition: top var(--dur-fast) var(--ease-standard);
+}
+.mtf-skip-link:focus-visible { top: 1rem; }
+
+@keyframes mtfFade  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mtfPop   { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes mtfToast { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* Hero content row: text left, weather widget right */
+.mtf-hero-content-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 48px;
+}
+
+.mtf-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Weather widget — sits at the right, bottom-aligned with the text block */
+.mtf-hero-wx {
+  flex-shrink: 0;
+  padding-bottom: 2px;
+}
+
+@media (max-width: 960px) {
+  .mtf-hero-content-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .mtf-hero-wx {
+    align-self: flex-end;
+  }
+}
+
+/* Process step icon tiles */
+.mtf-step-tile {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  border-radius: var(--radius-panel);
+  background: var(--surface-sunken);
+  box-shadow: var(--ring-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mtf-step-num {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  background: var(--surface-inverted);
+  color: #fff;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+.mtf-ico .d,
+.mtf-ico .ln,
+.mtf-ico .check,
+.mtf-ico .trail  { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.mtf-ico .pop    { transform: scale(0); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.mtf-ico .blade  { transform-box: fill-box; transform-origin: center; }
+
+/* Scroll-triggered draw */
+.mtf-steps.in .mtf-step { animation: mtfStepIn 0.6s var(--ease-standard) backwards; animation-delay: calc(var(--i) * 0.12s); }
+.mtf-steps.in .mtf-ico .d,
+.mtf-steps.in .mtf-ico .ln,
+.mtf-steps.in .mtf-ico .check,
+.mtf-steps.in .mtf-ico .trail { animation: mtfDraw 0.7s var(--ease-standard) forwards; }
+.mtf-steps.in .mtf-ico .pop   { animation: mtfIconPop 0.4s var(--ease-standard) forwards; }
+
+/* Stagger per icon */
+.mtf-steps.in .mtf-ico-cal .d1 { animation-delay: 0.15s; }
+.mtf-steps.in .mtf-ico-cal .d2 { animation-delay: 0.32s; }
+.mtf-steps.in .mtf-ico-cal .d3 { animation-delay: 0.42s; }
+.mtf-steps.in .mtf-ico-cal .p1 { animation-delay: 0.60s; }
+.mtf-steps.in .mtf-ico-cal .d4 { animation-delay: 0.78s; }
+.mtf-steps.in .mtf-ico-brief .d1 { animation-delay: 0.27s; }
+.mtf-steps.in .mtf-ico-brief .d2 { animation-delay: 0.42s; }
+.mtf-steps.in .mtf-ico-brief .l1 { animation-delay: 0.50s; }
+.mtf-steps.in .mtf-ico-brief .c1 { animation-delay: 0.62s; }
+.mtf-steps.in .mtf-ico-brief .l2 { animation-delay: 0.72s; }
+.mtf-steps.in .mtf-ico-brief .c2 { animation-delay: 0.84s; }
+.mtf-steps.in .mtf-ico-brief .l3 { animation-delay: 0.94s; }
+.mtf-steps.in .mtf-ico-brief .c3 { animation-delay: 1.06s; }
+.mtf-steps.in .mtf-ico-takeoff .trail { animation-delay: 0.40s; }
+.mtf-steps.in .mtf-ico-takeoff .rotor { animation: mtfLift 3s var(--ease-standard) 0.9s infinite; transform-box: fill-box; transform-origin: center; }
+.mtf-steps.in .mtf-ico-takeoff .blade { animation: mtfSpin 2.6s linear 0.9s infinite; }
+
+@keyframes mtfDraw    { to { stroke-dashoffset: 0; } }
+@keyframes mtfIconPop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes mtfSpin    { to { transform: rotate(360deg); } }
+@keyframes mtfLift    { 0%,100% { transform: translateY(2.5px); } 50% { transform: translateY(-2.5px); } }
+@keyframes mtfStepIn  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .mtf-steps.in .mtf-step { animation: none; }
+}
+
+/* ── Flag mast animation ── */
+.mtf-flag-body {
+  transform-box: fill-box;
+  /* left-center of the rect: x=23 half-h=8 → origin is at (0%, 50%) */
+  transform-origin: 0% 50%;
+}
+.mtf-flag-go {
+  animation: mtfFlagFly 2.4s ease-in-out infinite;
+}
+.mtf-flag-limited {
+  transform: rotate(45deg);
+  animation: mtfFlagDrift 5s ease-in-out infinite;
+}
+.mtf-flag-no {
+  transform: rotate(90deg);
+}
+@keyframes mtfFlagFly {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  25%       { transform: rotate(-6deg) skewX(-3deg); }
+  75%       { transform: rotate(7deg) skewX(2deg); }
+}
+@keyframes mtfFlagDrift {
+  0%, 100% { transform: rotate(45deg); }
+  50%       { transform: rotate(43deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mtf-flag-go, .mtf-flag-limited { animation: none; }
+}

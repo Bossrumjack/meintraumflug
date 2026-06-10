@@ -1,0 +1,38 @@
+:root {
+  --brand-red: #d11210;
+  --brand-red-hover: #e8231f;
+  --brand-blue: #003399;
+
+  --zinc-50:  #fafafa;
+  --zinc-100: #f5f5f6;
+  --zinc-200: #e6e6e9;
+  --zinc-400: #a2a2ab;
+  --zinc-500: #71717b;
+  --zinc-600: #52525c;
+  --zinc-900: #1c1c20;
+  --zinc-950: #0c0c0f;
+
+  --white: #ffffff;
+  --black: #000000;
+
+  --surface-page:     var(--zinc-50);
+  --surface-card:     var(--zinc-50);
+  --surface-sunken:   var(--zinc-100);
+  --surface-inverted: var(--zinc-950);
+
+  --text-strong:        var(--zinc-950);
+  --text-body:          var(--zinc-600);
+  --text-muted:         var(--zinc-500);
+  --text-on-dark:       var(--zinc-50);
+  --text-on-dark-muted: var(--zinc-400);
+
+  --accent:       var(--brand-red);
+  --accent-hover: var(--brand-red-hover);
+  --on-accent:    var(--white);
+
+  --border-hairline: rgba(0, 0, 0, 0.05);
+  --border-soft:     var(--zinc-200);
+  --border-on-dark:  rgba(255, 255, 255, 0.08);
+  --focus-ring:      var(--brand-red);
+  --selection:       rgba(209, 18, 16, 0.10);
+}

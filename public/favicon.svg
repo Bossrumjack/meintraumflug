@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background -->
+  <rect width="32" height="32" rx="7" fill="#0c0c0f"/>
+  <!-- Outer ring -->
+  <circle cx="16" cy="16" r="12" stroke="#f5f5f6" stroke-width="1.2" fill="none" opacity="0.9"/>
+  <!-- Inner dashed ring -->
+  <circle cx="16" cy="16" r="8.5" stroke="#f5f5f6" stroke-width="0.8" fill="none" stroke-dasharray="2.2 2.6" opacity="0.45"/>
+  <!-- Rotor blade (horizontal) -->
+  <rect x="4" y="14.5" width="24" height="3" rx="1.5" fill="#f5f5f6" opacity="0.92"/>
+  <!-- Rotor blade (angled ~30°) -->
+  <rect x="4" y="14.5" width="24" height="3" rx="1.5" fill="#f5f5f6" opacity="0.75" transform="rotate(60 16 16)"/>
+  <!-- Rotor blade (angled ~-30°) -->
+  <rect x="4" y="14.5" width="24" height="3" rx="1.5" fill="#f5f5f6" opacity="0.75" transform="rotate(-60 16 16)"/>
+  <!-- Hub -->
+  <circle cx="16" cy="16" r="3.5" fill="#d11210"/>
+  <circle cx="16" cy="16" r="1.5" fill="#ff3b38" opacity="0.6"/>
+</svg>
