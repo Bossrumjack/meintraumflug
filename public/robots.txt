@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://meintraumflug.kreativdock.com/sitemap.xml
+Sitemap: https://meintraumflug.de/sitemap.xml

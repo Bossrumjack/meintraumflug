@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://meintraumflug.kreativdock.com/</loc>
+    <loc>https://meintraumflug.de/</loc>
     <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="de" href="https://meintraumflug.kreativdock.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://meintraumflug.kreativdock.com/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://meintraumflug.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meintraumflug.de/"/>
   </url>
 </urlset>
