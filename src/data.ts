@@ -4,40 +4,52 @@ export interface Flight {
   title: string;
   description: string;
   price: string;
+  duration?: string;
   featured?: boolean;
 }
 
 export const FLIGHTS: Flight[] = [
   {
-    id: 'schnupper',
-    image: '/assets/cards/card-cockpit.png',
-    title: 'Schnupperflug',
+    id: 'lokal',
+    image: '/assets/cards/card-cockpit.webp',
+    title: 'Lokalrundflug',
     price: '149 €',
-    description: 'Der perfekte Einstieg. 30 Minuten pure Faszination inklusive Einweisung in die Technik.',
+    duration: '30 Min.',
+    description: 'Der ideale Einstieg in die Welt des Gyrocopters. Eine halbe Stunde über die Heimat – vom weiten Ebersberger Forst bis zur Allianz Arena. Vertraute Orte, plötzlich von oben gesehen.',
   },
   {
-    id: 'alpen',
-    image: '/assets/cards/card-rotor.png',
-    title: 'Alpenrundflug',
-    price: '279 €',
+    id: 'entdeckung',
+    image: '/assets/cards/card-castle.webp',
+    title: 'Entdeckungsrunde',
+    price: '199 €',
+    duration: '45 Min.',
+    description: 'Etwas weiter hinaus: 45 Minuten über sanfte Hügel und glitzernde Flusstäler bis ins mittelalterliche Wasserburg am Inn. Bayern, wie man es selten zu sehen bekommt.',
+  },
+  {
+    id: 'erlebnis',
+    image: '/assets/cards/card-rotor.webp',
+    title: 'Erlebnisrundflug',
+    price: '249 €',
+    duration: '60 Min.',
     featured: true,
-    description: '60 Minuten atemberaubende Panoramaausblicke über die Zugspitze und das Voralpenland.',
+    description: 'Eine volle Stunde am Himmel mit dem Chiemsee als großem Höhepunkt. Sehen Sie, wie das „Bayerische Meer" mit seinen Inseln unter Ihnen aufblitzt.',
   },
   {
-    id: 'schloesser',
-    image: '/assets/cards/card-castle.png',
-    title: 'Schlössertour',
-    price: '399 €',
-    description: 'Königliche Perspektiven. 90 Minuten Flugzeit über Neuschwanstein und Hohenschwangau.',
+    id: 'highlight',
+    image: '/assets/cards/card-highlight.webp',
+    title: 'Highlightrundflug',
+    price: '349 €',
+    duration: '90 Min.',
+    description: '90 Minuten pures Panorama: die große Chiemgaurunde mit funkelnden Seen, weiten Mooren und der gesamten Alpenkette am Horizont. Unser eindrucksvollstes Erlebnis.',
   },
 ];
 
 export const NAV_LINKS = [
-  { href: '#rundfluege',    label: 'Rundflüge' },
-  { href: '#ueber-mich',   label: 'Über mich' },
-  { href: '#gutscheine',   label: 'Gutscheine' },
-  { href: '#vorbereitung', label: 'Vorbereitung' },
+  { href: '#rundfluege',  label: 'Rundflüge' },
+  { href: '#ueber-mich', label: 'Über mich' },
+  { href: '#gutscheine', label: 'Gutscheine' },
   { href: '#kontakt-band', label: 'Kontakt' },
+  { href: '#kontakt',    label: 'Gut zu wissen' },
 ];
 
 export const FAQS = [

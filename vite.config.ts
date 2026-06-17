@@ -7,11 +7,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          if (id.includes('node_modules/react-dom')) return 'react-dom';
           if (id.includes('node_modules/react')) return 'react';
         },
       },
     },
     assetsInlineLimit: 4096,
+    reportCompressedSize: false,
     cssMinify: true,
     target: 'es2018',
   },

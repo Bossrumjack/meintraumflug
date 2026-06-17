@@ -6,19 +6,14 @@ import { Field } from './components/Field';
 import { useFocusTrap } from './hooks/useFocusTrap';
 import type { Flight } from './data';
 
-/* >>> STRIPE HANDOFF:
- * Step 4 "Bezahlen" is a UI placeholder. To wire real payments:
- * 1. POST to your backend to create a Stripe PaymentIntent → get client_secret
- * 2. Mount <PaymentElement> on that client_secret (replace the card Field block)
- * 3. On "Jetzt bezahlen": call stripe.confirmPayment() → on success setStep(5)
- * 4. Wire real availability to DATES/TIMES from Cal.com or custom slot model
- * 5. On success: send confirmation email (Resend) + Gutschein PDF if voucher
- */
 
-const DATES = ['Sa, 14. Juni', 'So, 15. Juni', 'Sa, 21. Juni', 'So, 22. Juni'];
-const TIMES = ['09:30', '11:00', '14:00', '16:30'];
-const PAY_METHODS = ['Karte', 'Apple Pay', 'Google Pay', 'Klarna', 'SEPA'];
-const TOTAL_STEPS = 4;
+function fmtWish(iso: string) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  } catch { return iso; }
+}
 
 interface BookingDialogProps {
   flights: Flight[];
@@ -29,36 +24,56 @@ interface BookingDialogProps {
 export function BookingDialog({ flights, initialFlight, onClose }: BookingDialogProps) {
   const [step, setStep] = useState(1);
   const [flightId, setFlightId] = useState(initialFlight ? initialFlight.id : flights[0].id);
-  const [date, setDate] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
-  const [payMethod, setPayMethod] = useState('Karte');
-  const [paying, setPaying] = useState(false);
+  const [wishDate, setWishDate] = useState('');
+  const [wishNote, setWishNote] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const flight = flights.find((f) => f.id === flightId) || flights[0];
+
+  const totalSteps = 3;
   const titleId = useId();
   const panelRef = useFocusTrap(true) as React.RefObject<HTMLDivElement>;
 
-  const chip = (active: boolean) => ({
-    padding: '10px 16px', borderRadius: 'var(--radius-xl)', fontSize: 'var(--text-sm)',
-    fontWeight: 'var(--fw-medium)' as const, cursor: 'pointer', textAlign: 'center' as const,
-    background: active ? 'var(--accent)' : 'var(--surface-sunken)',
-    color: active ? 'var(--on-accent)' : 'var(--text-strong)',
-    boxShadow: active ? 'none' : 'var(--ring-hairline)',
-    transition: 'all var(--dur-base) var(--ease-standard)',
-    border: 'none', fontFamily: 'var(--font-sans)',
-  });
-
   const sectionLabel = { fontSize: 'var(--text-2xs)', fontWeight: 'var(--fw-bold)' as const, textTransform: 'uppercase' as const, letterSpacing: 'var(--tracking-label)', color: 'var(--text-muted)', margin: '0 0 12px' };
 
-  const headerLabel = step > TOTAL_STEPS ? 'Bestätigt' : `Schritt ${step} von ${TOTAL_STEPS}`;
-  const headerTitle = step > TOTAL_STEPS ? 'Buchung bestätigt' : 'Flug buchen';
-
-  const pay = () => {
-    setPaying(true);
-    // >>> STRIPE: replace with stripe.confirmPayment() → on success setStep(5)
-    setTimeout(() => { setPaying(false); setStep(5); }, 900);
-  };
+  const headerLabel = step > totalSteps ? 'Anfrage gesendet' : `Schritt ${step} von ${totalSteps}`;
+  const headerTitle = step > totalSteps ? 'Wir melden uns!' : 'Flug anfragen';
 
   const onEsc = (e: React.KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+
+  async function handleSubmit() {
+    if (!name.trim() || !email.trim()) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const res = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName:   name.trim(),
+          customerEmail:  email.trim(),
+          customerPhone:  phone.trim(),
+          flightTitle:    flight.title,
+          flightDuration: flight.duration || '',
+          flightPrice:    flight.price,
+          wishDate,
+          wishNote,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(err.error || `Fehler ${res.status}`);
+      }
+      setStep(4);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Unbekannter Fehler');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div
@@ -126,22 +141,58 @@ export function BookingDialog({ flights, initialFlight, onClose }: BookingDialog
           )}
 
           {step === 2 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-              <div>
-                <p id="date-label" style={sectionLabel}>Datum</p>
-                <div role="radiogroup" aria-labelledby="date-label" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  {DATES.map((d) => (
-                    <button key={d} role="radio" aria-checked={d === date} style={chip(d === date)} onClick={() => setDate(d)}>{d}</button>
-                  ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Verfügbarkeitsinfo */}
+              <div style={{ background: 'var(--surface-sunken)', borderRadius: 'var(--radius-2xl)', boxShadow: 'var(--ring-hairline)', overflow: 'hidden' }}>
+                <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: '18px', lineHeight: 1, marginTop: '1px' }}>🕓</span>
+                    <div>
+                      <p style={{ margin: '0 0 2px', fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)', color: 'var(--text-strong)' }}>
+                        Täglich ab 16:00 Uhr
+                      </p>
+                      <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                        Bei schönem Wetter – Termine täglich nach Absprache
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ borderTop: '1px solid var(--border-hairline)' }} />
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: '18px', lineHeight: 1, marginTop: '1px' }}>📅</span>
+                    <div>
+                      <p style={{ margin: '0 0 2px', fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)', color: 'var(--text-strong)' }}>
+                        Wochenende: ganztägig
+                      </p>
+                      <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                        Samstag &amp; Sonntag – Termine vormittags und nachmittags möglich
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(209,18,16,0.06)', borderTop: '1px solid rgba(209,18,16,0.12)', padding: '12px 20px' }}>
+                  <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--text-body)' }}>
+                    Einfach Wunschtermin mitteilen – ich melde mich persönlich. Zahlung erst nach Bestätigung.
+                  </p>
                 </div>
               </div>
-              <div>
-                <p id="time-label" style={sectionLabel}>Uhrzeit</p>
-                <div role="radiogroup" aria-labelledby="time-label" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-                  {TIMES.map((t) => (
-                    <button key={t} role="radio" aria-checked={t === time} style={chip(t === time)} onClick={() => setTime(t)}>{t}</button>
-                  ))}
+
+              {/* Wunschtermin */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label htmlFor="wish-date" style={sectionLabel}>Wunschdatum (optional)</label>
+                  <input id="wish-date" type="date" value={wishDate} onChange={(e) => setWishDate(e.target.value)}
+                    style={{
+                      width: '100%', boxSizing: 'border-box', background: 'var(--surface-sunken)', border: 'none',
+                      borderRadius: 'var(--radius-md)', padding: '12px', fontFamily: 'var(--font-sans)',
+                      fontSize: 'var(--text-sm)', color: 'var(--text-strong)', outline: 'none',
+                      boxShadow: 'inset 0 0 0 1px transparent',
+                    }}
+                    onFocus={(e) => { e.target.style.boxShadow = 'inset 0 0 0 1px var(--focus-ring)'; }}
+                    onBlur={(e) => { e.target.style.boxShadow = 'inset 0 0 0 1px transparent'; }}
+                  />
                 </div>
+                <Field label="Anmerkung" placeholder="z. B. lieber nachmittags, flexibel am Wochenende …"
+                  value={wishNote} onChange={(e) => setWishNote(e.target.value)} />
               </div>
             </div>
           )}
@@ -149,60 +200,29 @@ export function BookingDialog({ flights, initialFlight, onClose }: BookingDialog
           {step === 3 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <p style={sectionLabel}>Ihre Kontaktdaten</p>
-              <Field label="Name" required placeholder="Max Mustermann" />
-              <Field label="E-Mail" type="email" required placeholder="max@example.de" />
-              <Field label="Telefon" type="tel" placeholder="+49 …" />
+              <Field label="Name" required placeholder="Max Mustermann"
+                value={name} onChange={(e) => setName(e.target.value)} />
+              <Field label="E-Mail" type="email" required placeholder="max@example.de"
+                value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Field label="Telefon" type="tel" placeholder="+49 …"
+                value={phone} onChange={(e) => setPhone(e.target.value)} />
+              {submitError && (
+                <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--accent)', background: 'rgba(209,18,16,0.06)', borderRadius: 'var(--radius-md)', padding: '10px 14px' }}>
+                  {submitError}
+                </p>
+              )}
             </div>
           )}
 
           {step === 4 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div>
-                <p id="pay-label" style={sectionLabel}>Zahlungsart</p>
-                <div role="radiogroup" aria-labelledby="pay-label" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {PAY_METHODS.map((m) => (
-                    <button key={m} role="radio" aria-checked={m === payMethod} style={{ ...chip(m === payMethod), padding: '9px 14px' }} onClick={() => setPayMethod(m)}>{m}</button>
-                  ))}
-                </div>
-              </div>
-
-              {/* >>> STRIPE: replace this block with <PaymentElement /> */}
-              {payMethod === 'Karte' ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <Field label="Kartennummer" placeholder="4242 4242 4242 4242" />
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <Field label="Gültig bis" placeholder="MM / JJ" />
-                    <Field label="CVC" placeholder="123" />
-                  </div>
-                  <Field label="Name auf der Karte" placeholder="Max Mustermann" />
-                </div>
-              ) : (
-                <div style={{ background: 'var(--surface-sunken)', borderRadius: 'var(--radius-2xl)', boxShadow: 'var(--ring-hairline)', padding: '24px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--text-body)' }}>
-                    Sie werden zur Zahlung mit <strong style={{ color: 'var(--text-strong)' }}>{payMethod}</strong> weitergeleitet.
-                  </p>
-                </div>
-              )}
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '4px' }}>
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>Gesamt</span>
-                <span style={{ fontSize: 'var(--text-h3)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', whiteSpace: 'nowrap' }}>{flight.price}</span>
-              </div>
-              <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span aria-hidden="true" style={{ width: '6px', height: '6px', borderRadius: '9999px', background: 'var(--brand-red)', flex: 'none' }} />
-                Sichere Zahlung · 3 Jahre umbuchbar · Demo — keine echte Abbuchung
-              </p>
-            </div>
-          )}
-
-          {step === 5 && (
             <div role="status" style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '4px 0 12px' }}>
               <span aria-hidden="true" style={{ width: '44px', height: '44px', borderRadius: '9999px', background: 'var(--accent)', color: 'var(--on-accent)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>✓</span>
               <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-body)', margin: 0, lineHeight: 'var(--leading-relaxed)' }}>
-                Ihr <strong style={{ color: 'var(--text-strong)' }}>{flight.title}</strong> am <strong style={{ color: 'var(--text-strong)' }}>{date || DATES[0]}</strong> um <strong style={{ color: 'var(--text-strong)' }}>{time || TIMES[0]} Uhr</strong> ist gebucht.
+                Ihre Anfrage für den <strong style={{ color: 'var(--text-strong)' }}>{flight.title}</strong>
+                {wishDate ? <> zum Wunschdatum <strong style={{ color: 'var(--text-strong)' }}>{fmtWish(wishDate)}</strong></> : null} ist eingegangen.
               </p>
               <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', margin: 0 }}>
-                Eine Bestätigung mit allen Details ist auf dem Weg in Ihr Postfach. Wir freuen uns auf Ihren Flug!
+                Ich melde mich persönlich mit einem passenden Terminvorschlag. Die Zahlung erfolgt erst nach Bestätigung.
               </p>
             </div>
           )}
@@ -215,11 +235,18 @@ export function BookingDialog({ flights, initialFlight, onClose }: BookingDialog
             <span style={{ color: 'var(--text-strong)', fontWeight: 'var(--fw-semibold)', marginLeft: '8px' }}>{flight.price}</span>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            {step > 1 && step <= TOTAL_STEPS && <Button variant="ghost" onClick={() => setStep(step - 1)}>Zurück</Button>}
-            {step < 3 && <Button variant="primary" onClick={() => setStep(step + 1)} disabled={step === 2 && (!date || !time)}>Weiter</Button>}
-            {step === 3 && <Button variant="primary" onClick={() => setStep(4)}>Zur Zahlung</Button>}
-            {step === 4 && <Button variant="primary" onClick={pay} disabled={paying}>{paying ? 'Wird verarbeitet…' : `Jetzt bezahlen · ${flight.price}`}</Button>}
-            {step === 5 && <Button variant="primary" onClick={onClose}>Schließen</Button>}
+            {step > 1 && step <= totalSteps && <Button variant="ghost" onClick={() => setStep(step - 1)}>Zurück</Button>}
+            {step < totalSteps && <Button variant="primary" onClick={() => setStep(step + 1)}>Weiter</Button>}
+            {step === totalSteps && (
+              <Button
+                variant="primary"
+                onClick={handleSubmit}
+                disabled={submitting || !name.trim() || !email.trim()}
+              >
+                {submitting ? 'Wird gesendet…' : 'Anfrage senden'}
+              </Button>
+            )}
+            {step === 4 && <Button variant="primary" onClick={onClose}>Schließen</Button>}
           </div>
         </div>
       </div>

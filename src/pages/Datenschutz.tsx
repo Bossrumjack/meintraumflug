@@ -35,7 +35,7 @@ export function Datenschutz() {
       <h2>2. Verantwortlicher</h2>
       <div className="legal-block">
         <p><strong>meintraumflug GmbH</strong></p>
-        <p>Flugplatzstraße 100, 82205 Gilching</p>
+        <p>Straßham bei Hohenlinden, 85664 Hohenlinden</p>
         <p>E-Mail: <a href="mailto:info@meintraumflug.de">info@meintraumflug.de</a></p>
         <p>Telefon: +49 (0) 89 123 456 78</p>
       </div>

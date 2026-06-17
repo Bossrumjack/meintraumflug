@@ -2,17 +2,22 @@ import { Eyebrow } from '../components/Eyebrow';
 import { StatCard } from '../components/StatCard';
 import { Card } from '../components/Card';
 import { useLang } from '../i18n';
+import { useReveal } from '../hooks/useReveal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const h2style = { fontSize: 'var(--text-h1)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-tight)', margin: 0, textWrap: 'balance' } as const;
 
 export function About() {
   const { t } = useLang();
   const a = t.about;
+  const { isMobile } = useBreakpoint();
+  const { ref: leftRef, style: leftStyle } = useReveal();
+  const { ref: rightRef, style: rightStyle } = useReveal(120);
 
   return (
-    <section id="ueber-mich" style={{ padding: '96px var(--gutter)', borderTop: '1px solid var(--border-soft)' }}>
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '48px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <section id="ueber-mich" style={{ padding: `${isMobile ? '64px' : '96px'} var(--gutter)`, borderTop: '1px solid var(--border-soft)' }}>
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.05fr 0.95fr', gap: isMobile ? '40px' : '48px', alignItems: 'stretch' }}>
+        <div ref={leftRef as React.RefObject<HTMLDivElement>} style={{ ...leftStyle, display: 'flex', flexDirection: 'column', gap: '32px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <Eyebrow>{a.eyebrow}</Eyebrow>
             <h2 style={h2style}>{a.heading}</h2>
@@ -30,7 +35,7 @@ export function About() {
             </p>
           </Card>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '20px' }}>
+        <div ref={rightRef as React.RefObject<HTMLDivElement>} style={{ ...rightStyle, display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '20px' }}>
           <picture>
             <source srcSet="/assets/photos/pilot-portrait.webp" type="image/webp" />
             <img src="/assets/photos/pilot-portrait.jpg" alt={a.imgPilotAlt} loading="lazy"
@@ -38,8 +43,8 @@ export function About() {
           </picture>
           <div style={{ display: 'grid', gap: '20px' }}>
             <picture>
-              <source srcSet="/assets/photos/cockpit-flight.webp" type="image/webp" />
-              <img src="/assets/photos/cockpit-flight.jpg" alt={a.imgCockpitAlt} loading="lazy"
+              <source srcSet="/assets/photos/gyrocopter.webp" type="image/webp" />
+              <img src="/assets/photos/gyrocopter.jpg" alt={a.imgGyroAlt} loading="lazy"
                 style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', borderRadius: 'var(--radius-3xl)', boxShadow: 'var(--ring-hairline)' }} />
             </picture>
             <Card variant="sunken" radius="3xl" padding={24} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '180px' }}>

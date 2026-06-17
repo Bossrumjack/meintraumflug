@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useLang } from '../i18n';
+import { useReveal } from '../hooks/useReveal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 function IconKalender() {
   return (
@@ -47,6 +49,8 @@ const ICONS = [IconKalender, IconBriefing, IconAbheben];
 
 export function Process() {
   const { t } = useLang();
+  const { isMobile } = useBreakpoint();
+  const { ref: sectionRef, style: sectionRevealStyle } = useReveal();
   const ref = useRef<HTMLOListElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -68,12 +72,12 @@ export function Process() {
   }, []);
 
   return (
-    <section id="ablauf" style={{ padding: '96px var(--gutter)' }}>
+    <section ref={sectionRef} id="ablauf" style={{ padding: `${isMobile ? '64px' : '96px'} var(--gutter)`, ...sectionRevealStyle }}>
       <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
-        <h2 style={{ fontSize: 'var(--text-h1)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-tight)', textAlign: 'center', marginBottom: '72px' }}>
+        <h2 style={{ fontSize: 'var(--text-h1)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-tight)', textAlign: 'center', marginBottom: isMobile ? '48px' : '72px' }}>
           {t.process.heading}
         </h2>
-        <ol ref={ref} className={`mtf-steps${inView ? ' in' : ''}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', listStyle: 'none', margin: 0, padding: 0 }}>
+        <ol ref={ref} className={`mtf-steps${inView ? ' in' : ''}`} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '40px', listStyle: 'none', margin: 0, padding: 0 }}>
           {t.process.steps.map((s, i) => {
             const Icon = ICONS[i];
             return (

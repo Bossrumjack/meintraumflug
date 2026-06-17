@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useLang } from '../i18n';
+import { useReveal } from '../hooks/useReveal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const CONTACT = {
   phoneDisplay: '+49 (0) 89 123 456 78',
@@ -35,6 +37,8 @@ export function Contact({ onCallback }: ContactProps) {
   const c = t.contact;
   const [num, setNum] = useState('');
   const [sent, setSent] = useState(false);
+  const { isMobile } = useBreakpoint();
+  const { ref: cardRef, style: cardStyle } = useReveal();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,12 +74,12 @@ export function Contact({ onCallback }: ContactProps) {
   }
 
   return (
-    <section id="kontakt-band" style={{ padding: '0 var(--gutter) 96px' }}>
-      <div style={{
+    <section id="kontakt-band" style={{ padding: `0 var(--gutter) ${isMobile ? '64px' : '96px'}` }}>
+      <div ref={cardRef as React.RefObject<HTMLDivElement>} style={{ ...cardStyle,
         maxWidth: 'var(--container-max)', margin: '0 auto',
         background: 'var(--surface-inverted)', borderRadius: 'var(--radius-hero)',
-        padding: '56px', color: 'var(--text-on-dark)',
-        display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: '56px', alignItems: 'center',
+        padding: isMobile ? '28px' : '56px', color: 'var(--text-on-dark)',
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? '32px' : '56px', alignItems: 'center',
       }}>
         <div>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-2xs)', fontWeight: 'var(--fw-bold)', textTransform: 'uppercase', letterSpacing: 'var(--tracking-label)', color: 'var(--text-on-dark-muted)', marginBottom: '24px' }}>
@@ -98,7 +102,7 @@ export function Contact({ onCallback }: ContactProps) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '14px' }}>
             <Channel icon="whatsapp" tone="#1fa855" label={c.whatsappLabel} value={c.whatsappValue} hint={c.whatsappHint}
               href={`https://wa.me/${CONTACT.whatsappHref}`} />
             <Channel icon="phone" tone="var(--brand-red)" label={c.phoneLabel} value={CONTACT.phoneDisplay} hint={c.phoneHint}

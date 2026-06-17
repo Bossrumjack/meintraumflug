@@ -2,6 +2,8 @@ import { FaqItem } from '../components/FaqItem';
 import { Card } from '../components/Card';
 import { Eyebrow } from '../components/Eyebrow';
 import { useLang } from '../i18n';
+import { useReveal } from '../hooks/useReveal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const h2 = { fontSize: 'var(--text-h1)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-tight)', margin: 0 } as const;
 
@@ -25,11 +27,14 @@ function FactIcon({ name }: { name: string }) {
 export function FaqContact() {
   const { t } = useLang();
   const f = t.faq;
+  const { isMobile } = useBreakpoint();
+  const { ref: leftRef, style: leftStyle } = useReveal();
+  const { ref: rightRef, style: rightStyle } = useReveal(120);
 
   return (
-    <section id="kontakt" style={{ padding: '96px var(--gutter)', background: 'rgba(244,244,245,0.5)', borderTop: '1px solid var(--border-soft)' }}>
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
-        <div>
+    <section id="kontakt" style={{ padding: `${isMobile ? '64px' : '96px'} var(--gutter)`, background: 'rgba(244,244,245,0.5)', borderTop: '1px solid var(--border-soft)' }}>
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '48px' : '80px', alignItems: 'start' }}>
+        <div ref={leftRef as React.RefObject<HTMLDivElement>} style={leftStyle}>
           <h2 style={{ ...h2, marginBottom: '32px' }}>{f.heading}</h2>
           <div>
             {t.faqs.map((faq, i) => (
@@ -37,7 +42,7 @@ export function FaqContact() {
             ))}
           </div>
         </div>
-        <div>
+        <div ref={rightRef as React.RefObject<HTMLDivElement>} style={rightStyle}>
           <Eyebrow>{f.guteysEyebrow}</Eyebrow>
           <h2 style={{ ...h2, margin: '16px 0 28px' }}>{f.guteysHeading}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }}>

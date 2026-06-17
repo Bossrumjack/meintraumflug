@@ -21,18 +21,25 @@ export function Footer() {
               {col.title}
             </h4>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {col.links.map((l) => (
-                <li key={l.label} style={{ fontSize: 'var(--text-xs)', lineHeight: 1.4 }}>
-                  {l.href ? (
-                    <a href={l.href} onClick={() => window.scrollTo(0, 0)}
-                      style={{ color: 'inherit', transition: 'color var(--dur-base) var(--ease-standard)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--zinc-50)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '')}>
-                      {l.label}
-                    </a>
-                  ) : l.label}
-                </li>
-              ))}
+              {col.links.map((l) => {
+                const link = l as { label: string; href: string | null };
+                const isExternal = link.href?.startsWith('http');
+                return (
+                  <li key={link.label} style={{ fontSize: 'var(--text-xs)', lineHeight: 1.4 }}>
+                    {link.href ? (
+                      <a href={link.href}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
+                        onClick={isExternal ? undefined : () => window.scrollTo(0, 0)}
+                        style={{ color: 'inherit', transition: 'color var(--dur-base) var(--ease-standard)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--zinc-50)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = '')}>
+                        {link.label}
+                      </a>
+                    ) : link.label}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

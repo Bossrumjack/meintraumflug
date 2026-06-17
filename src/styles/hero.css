@@ -115,9 +115,9 @@
   background: rgba(255,255,255,0.10);
   color: #fff;
   font-family: var(--font-sans);
-  font-size: var(--text-base);
+  font-size: 15px;
   font-weight: var(--fw-medium);
-  padding: 13px 24px;
+  padding: 14px 32px;
   border: none;
   border-radius: var(--radius-xl);
   cursor: pointer;
@@ -125,9 +125,32 @@
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   transition: background var(--dur-base) var(--ease-standard);
+  text-decoration: none;
+  line-height: 1;
 }
 
 .mtf-hero-ghost:hover { background: rgba(255,255,255,0.18); }
+
+.mtf-hero-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(37,211,102,0.15);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  padding: 14px 32px;
+  line-height: 1;
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px rgba(37,211,102,0.40);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background var(--dur-base) var(--ease-standard);
+}
+.mtf-hero-whatsapp:hover { background: rgba(37,211,102,0.26); }
+.mtf-hero-whatsapp svg { flex: none; }
 
 .mtf-play {
   width: 24px;
@@ -254,32 +277,20 @@
 @keyframes mtfPop   { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
 @keyframes mtfToast { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-/* Hero content row: text left, weather widget right */
-.mtf-hero-content-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 48px;
-}
-
-.mtf-hero-text {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Weather widget — sits at the right, bottom-aligned with the text block */
+/* Weather widget — absolut positioniert, unten rechts im Hero */
 .mtf-hero-wx {
-  flex-shrink: 0;
-  padding-bottom: 2px;
+  position: absolute;
+  z-index: 3;
+  bottom: 155px;
+  right: 0;
 }
 
-@media (max-width: 960px) {
-  .mtf-hero-content-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 28px;
-  }
+@media (max-width: 920px) {
   .mtf-hero-wx {
-    align-self: flex-end;
+    position: static;
+    margin: 0 0 28px auto;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 
@@ -382,4 +393,30 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .mtf-flag-go, .mtf-flag-limited { animation: none; }
+}
+
+@media (max-width: 767px) {
+  .mtf-hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .mtf-hero-cta > * {
+    width: 100%;
+    justify-content: center;
+  }
+  .mtf-hero-sub {
+    font-size: var(--text-base);
+  }
+  .mtf-hero-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .mtf-hero-meta-group {
+    gap: 20px;
+  }
+  .mtf-hero-body {
+    padding-bottom: 36px;
+  }
 }

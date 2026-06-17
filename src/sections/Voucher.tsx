@@ -1,6 +1,8 @@
 import { Button } from '../components/Button';
 import { VoucherCard, DEFAULT_VOUCHER } from '../components/VoucherCard';
 import { useLang } from '../i18n';
+import { useReveal } from '../hooks/useReveal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const wrap = { maxWidth: 'var(--container-max)', margin: '0 auto' };
 const h2 = { fontSize: 'var(--text-h1)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-strong)', lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-tight)', margin: 0 } as const;
@@ -12,14 +14,16 @@ interface VoucherProps {
 export function Voucher({ onConfigure }: VoucherProps) {
   const { t } = useLang();
   const v = t.voucher;
+  const { isMobile } = useBreakpoint();
+  const { ref, style: revealStyle } = useReveal();
 
   return (
-    <section id="gutscheine" style={{ padding: '96px var(--gutter)' }}>
-      <div style={{
+    <section id="gutscheine" style={{ padding: `${isMobile ? '64px' : '96px'} var(--gutter)` }}>
+      <div ref={ref as React.RefObject<HTMLDivElement>} style={{ ...revealStyle,
         ...wrap,
         background: 'var(--surface-inverted)', borderRadius: 'var(--radius-hero)',
-        padding: '64px', color: 'var(--text-on-dark)',
-        display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '56px', alignItems: 'center',
+        padding: isMobile ? '32px' : '64px', color: 'var(--text-on-dark)',
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.1fr', gap: isMobile ? '40px' : '56px', alignItems: 'center',
       }}>
         <div>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-2xs)', fontWeight: 'var(--fw-bold)', textTransform: 'uppercase', letterSpacing: 'var(--tracking-label)', color: 'var(--text-on-dark-muted)', marginBottom: '20px' }}>

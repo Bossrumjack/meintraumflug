@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { LangProvider, useLang } from './i18n';
 import { Nav } from './sections/Nav';
 import { Hero } from './sections/Hero';
+import { Showreel } from './Showreel';
 import { Experiences } from './sections/Experiences';
 import { About } from './sections/About';
 import { Voucher } from './sections/Voucher';
 import { Process } from './sections/Process';
 import { FaqContact } from './sections/FaqContact';
-import { Preparation } from './sections/Preparation';
 import { Contact } from './sections/Contact';
 import { Footer } from './sections/Footer';
 import { BookingDialog } from './BookingDialog';
@@ -37,17 +37,20 @@ function AppInner() {
   const [page, setPage] = useState<Page>(getPage);
   const [booking, setBooking] = useState<BookingState | null>(null);
   const [voucherOpen, setVoucherOpen] = useState(false);
+  const [showreelOpen, setShowreelOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     const onHash = () => {
       const next = getPage();
-      setPage(next);
-      window.scrollTo(0, 0);
+      if (next !== page) {
+        setPage(next);
+        window.scrollTo(0, 0);
+      }
     };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
-  }, []);
+  }, [page]);
 
   const openBooking = (flight: Flight | null = null) => setBooking({ flight });
   const closeBooking = () => setBooking(null);
@@ -65,12 +68,11 @@ function AppInner() {
       <a href="#main-content" className="mtf-skip-link">{t.skipLink}</a>
       <Nav onBook={() => openBooking(null)} />
       <main id="main-content">
-        <Hero onChoose={() => openBooking(null)} onShowreel={() => showToast(t.showreelToast)} />
+        <Hero onChoose={() => openBooking(null)} onShowreel={() => setShowreelOpen(true)} />
         <Experiences onBook={(f) => openBooking(f)} />
         <About />
         <Voucher onConfigure={() => setVoucherOpen(true)} />
         <Process />
-        <Preparation />
         <FaqContact />
       </main>
       <Contact onCallback={(num) => showToast(`${num} – ${t.contact.callbackSubmit}`)} />
@@ -84,6 +86,7 @@ function AppInner() {
           onCheckout={(v) => { setVoucherOpen(false); showToast(`${v.total} € – Demo`); }}
         />
       )}
+      {showreelOpen && <Showreel onClose={() => setShowreelOpen(false)} />}
       <div role="status" aria-live="polite" aria-atomic="true" style={{ position: 'fixed', bottom: 0, left: 0, pointerEvents: 'none', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
         {toast}
       </div>

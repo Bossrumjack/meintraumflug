@@ -36,7 +36,7 @@ export function VoucherCard({ data: d, scale = 1 }: VoucherCardProps) {
       boxShadow: '0 30px 60px -24px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.10)',
       color: '#fff', fontSize: `${scale}rem`,
     }}>
-      <img src={motif.src} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+      <img src={motif.src} alt="" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(115deg, rgba(12,12,15,0.82) 0%, rgba(12,12,15,0.46) 46%, rgba(12,12,15,0.18) 100%)' }} />
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'var(--brand-red)' }} />
       <div style={{ position: 'relative', height: '100%', padding: '1.6em 1.9em', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>

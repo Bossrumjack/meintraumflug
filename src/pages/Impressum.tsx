@@ -9,9 +9,8 @@ export function Impressum() {
 
       <div className="legal-block">
         <p><strong>meintraumflug GmbH</strong></p>
-        <p>Flugplatz Oberpfaffenhofen</p>
-        <p>Flugplatzstraße 100</p>
-        <p>82205 Gilching</p>
+        <p>Straßham bei Hohenlinden</p>
+        <p>85664 Hohenlinden</p>
       </div>
 
       <h2>Kontakt</h2>
@@ -31,8 +30,8 @@ export function Impressum() {
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <div className="legal-block">
         <p><strong>[Vorname Nachname]</strong></p>
-        <p>Flugplatzstraße 100</p>
-        <p>82205 Gilching</p>
+        <p>Straßham bei Hohenlinden</p>
+        <p>85664 Hohenlinden</p>
       </div>
 
       <h2>EU-Streitschlichtung</h2>

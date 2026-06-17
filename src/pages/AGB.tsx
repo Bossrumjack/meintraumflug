@@ -4,7 +4,7 @@ export function AGB() {
   return (
     <LegalPage title="Allgemeine Geschäftsbedingungen">
       <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginBottom: '32px' }}>
-        Stand: Juni 2026 — meintraumflug GmbH, Flugplatzstraße 100, 82205 Gilching
+        Stand: Juni 2026 — meintraumflug GmbH, Straßham bei Hohenlinden, 85664 Hohenlinden
       </p>
 
       <h2>§ 1 Geltungsbereich</h2>
