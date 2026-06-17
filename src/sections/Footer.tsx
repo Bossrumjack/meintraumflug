@@ -1,14 +1,16 @@
 import { LogoMark, Wordmark } from './LogoMark';
 import { useLang } from '../i18n';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 export function Footer() {
   const { t } = useLang();
   const f = t.footer;
+  const { isMobile } = useBreakpoint();
 
   return (
-    <footer style={{ background: 'var(--surface-inverted)', color: 'var(--text-on-dark-muted)', padding: '64px var(--gutter)' }}>
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1.2fr', gap: '48px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <footer style={{ background: 'var(--surface-inverted)', color: 'var(--text-on-dark-muted)', padding: `${isMobile ? '48px' : '64px'} var(--gutter)` }}>
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1.4fr 1fr 1fr 1.2fr', gap: isMobile ? '32px 24px' : '48px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', gridColumn: isMobile ? '1 / -1' : undefined }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <LogoMark size={26} dark />
             <Wordmark onDark size={13} />

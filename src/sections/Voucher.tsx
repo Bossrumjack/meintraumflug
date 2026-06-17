@@ -48,7 +48,7 @@ export function Voucher({ onConfigure }: VoucherProps) {
           </Button>
         </div>
 
-        <div style={{ position: 'relative' }}>
+        {!isMobile && <div style={{ position: 'relative' }}>
           <VoucherCard data={{ ...DEFAULT_VOUCHER, recipient: v.demoRecipient, message: v.demoMessage }} />
           <button onClick={onConfigure} style={{
             position: 'absolute', bottom: '-16px', right: '-16px', background: 'var(--surface-page)',
@@ -60,7 +60,7 @@ export function Voucher({ onConfigure }: VoucherProps) {
             <span style={{ width: '7px', height: '7px', borderRadius: '9999px', background: 'var(--brand-red)' }} />
             {v.live}
           </button>
-        </div>
+        </div>}
       </div>
     </section>
   );

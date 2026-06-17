@@ -23,7 +23,7 @@ export function About() {
             <h2 style={h2style}>{a.heading}</h2>
             <p style={{ fontSize: 'var(--text-lg)', color: 'var(--text-body)', maxWidth: '58ch', margin: 0 }}>{a.body}</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: '16px' }}>
             {a.stats.map((s) => (
               <StatCard key={s.label} label={s.label}>{s.value}</StatCard>
             ))}
@@ -35,7 +35,7 @@ export function About() {
             </p>
           </Card>
         </div>
-        <div ref={rightRef as React.RefObject<HTMLDivElement>} style={{ ...rightStyle, display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '20px' }}>
+        <div ref={rightRef as React.RefObject<HTMLDivElement>} style={{ ...rightStyle, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.05fr 0.95fr', gap: '20px' }}>
           <picture>
             <source srcSet="/assets/photos/pilot-portrait.webp" type="image/webp" />
             <img src="/assets/photos/pilot-portrait.jpg" alt={a.imgPilotAlt} loading="lazy"

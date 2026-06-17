@@ -122,10 +122,10 @@ export function Contact({ onCallback }: ContactProps) {
                 <label htmlFor="cb-num" style={{ fontSize: 'var(--text-2xs)', fontWeight: 'var(--fw-bold)', textTransform: 'uppercase', letterSpacing: 'var(--tracking-label)', color: 'var(--text-on-dark-muted)' }}>
                   {c.callbackLabel}
                 </label>
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '10px' }}>
                   <input id="cb-num" type="tel" value={num} onChange={(e) => setNum(e.target.value)} placeholder={c.callbackPlaceholder}
                     style={{ flex: 1, minWidth: 0, background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 'var(--radius-md)', padding: '12px', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', color: '#fff', outline: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.10)' }} />
-                  <button type="submit" style={{ flex: 'none', background: 'var(--accent)', color: 'var(--on-accent)', border: 'none', borderRadius: 'var(--radius-xl)', padding: '0 22px', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                  <button type="submit" style={{ flex: 'none', background: 'var(--accent)', color: 'var(--on-accent)', border: 'none', borderRadius: 'var(--radius-xl)', padding: isMobile ? '13px' : '0 22px', width: isMobile ? '100%' : 'auto', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                     {c.callbackSubmit}
                   </button>
                 </div>

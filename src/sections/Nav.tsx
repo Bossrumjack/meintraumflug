@@ -9,10 +9,10 @@ interface NavProps {
 
 export function Nav({ onBook }: NavProps) {
   const { t, toggle } = useLang();
+  const { isMobile } = useBreakpoint();
   const [hovered, setHovered] = useState<string | null>(null);
   const [mode, setMode] = useState<'transparent' | 'dark' | 'light'>('transparent');
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     const onScroll = () => {
@@ -27,10 +27,6 @@ export function Nav({ onBook }: NavProps) {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) setMenuOpen(false);
-  }, [isMobile]);
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
@@ -40,7 +36,7 @@ export function Nav({ onBook }: NavProps) {
   return (
     <>
       <nav aria-label={t.lang === 'de' ? 'Hauptnavigation' : 'Main navigation'} style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, WebkitTransform: 'translateZ(0)',
         background: mode === 'light' ? 'rgba(250,250,250,0.88)' : mode === 'dark' ? 'rgba(0,0,0,0.45)' : 'transparent',
         backdropFilter: mode !== 'transparent' ? 'blur(12px)' : 'none', WebkitBackdropFilter: mode !== 'transparent' ? 'blur(12px)' : 'none',
         borderBottom: mode === 'light' ? '1px solid var(--border-soft)' : '1px solid transparent',
@@ -54,86 +50,80 @@ export function Nav({ onBook }: NavProps) {
             <img
               src={onGlass ? '/assets/logo-meintraumflug-light.png' : '/assets/logo-meintraumflug.png'}
               alt="meintraumflug"
-              height={48}
-              style={{ height: '48px', width: 'auto', display: 'block', transition: 'opacity var(--dur-base) var(--ease-standard)' }}
+              height={isMobile ? 36 : 48}
+              style={{ height: isMobile ? '36px' : '48px', width: 'auto', display: 'block' }}
             />
           </a>
 
-          {!isMobile && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-              {t.nav.links.map((l) => (
-                <a key={l.href} href={l.href}
-                  onMouseEnter={() => setHovered(l.href)}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{
-                    fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)',
-                    color: mode === 'light' ? 'var(--text-strong)' : '#fff',
-                    textDecoration: 'none',
-                    paddingBottom: '3px',
-                    borderBottom: hovered === l.href ? '2px solid var(--brand-red)' : '2px solid transparent',
-                    transition: 'color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)',
-                  }}>
-                  {l.label}
-                </a>
-              ))}
-            </div>
-          )}
-
-          {!isMobile && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <button
-                onClick={toggle}
-                aria-label={t.langLabel}
+          {/* Desktop links — CSS hides on mobile */}
+          <div className="mtf-nav-desktop" style={{ alignItems: 'center', gap: '32px' }}>
+            {t.nav.links.map((l) => (
+              <a key={l.href} href={l.href}
+                onMouseEnter={() => setHovered(l.href)}
+                onMouseLeave={() => setHovered(null)}
                 style={{
-                  background: 'transparent',
-                  border: onGlass ? '1px solid rgba(255,255,255,0.30)' : '1px solid var(--border-default)',
-                  borderRadius: 'var(--radius-xl)',
-                  color: onGlass ? 'rgba(255,255,255,0.80)' : 'var(--text-body)',
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '11px',
-                  fontWeight: 'var(--fw-bold)',
-                  letterSpacing: '0.08em',
-                  padding: '8px 14px',
-                  cursor: 'pointer',
+                  fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-medium)',
+                  color: mode === 'light' ? 'var(--text-strong)' : '#fff',
+                  textDecoration: 'none',
+                  paddingBottom: '3px',
+                  borderBottom: hovered === l.href ? '2px solid var(--brand-red)' : '2px solid transparent',
                   transition: 'color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)',
-                }}
-              >
-                {t.langToggle}
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" style={{ marginLeft: '4px', display: 'inline-block', verticalAlign: 'middle' }}>
-                  <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <Button variant="primary" size="md" onClick={onBook}>{t.nav.book}</Button>
-            </div>
-          )}
+                }}>
+                {l.label}
+              </a>
+            ))}
+          </div>
 
-          {isMobile && (
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-label={menuOpen ? 'Menü schließen' : 'Menü öffnen'}
-              aria-expanded={menuOpen}
-              style={{
-                background: 'transparent', border: 'none', padding: '8px',
-                cursor: 'pointer',
-                color: onGlass && !menuOpen ? '#fff' : 'var(--text-strong)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              {menuOpen ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M3 6h18M3 12h18M3 18h18" />
-                </svg>
-              )}
+          {/* Desktop lang+book — CSS hides on mobile */}
+          <div className="mtf-nav-desktop" style={{ alignItems: 'center', gap: '10px' }}>
+            <button onClick={toggle} aria-label={t.langLabel} style={{
+              background: 'transparent',
+              border: onGlass ? '1px solid rgba(255,255,255,0.30)' : '1px solid var(--border-default)',
+              borderRadius: 'var(--radius-xl)',
+              color: onGlass ? 'rgba(255,255,255,0.80)' : 'var(--text-body)',
+              fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 'var(--fw-bold)',
+              letterSpacing: '0.08em', padding: '8px 14px', cursor: 'pointer',
+              transition: 'color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)',
+            }}>
+              {t.langToggle}
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" style={{ marginLeft: '4px', display: 'inline-block', verticalAlign: 'middle' }}>
+                <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
-          )}
+            <Button variant="primary" size="md" onClick={onBook}>{t.nav.book}</Button>
+          </div>
+
+          {/* Hamburger — CSS shows only on mobile */}
+          <button
+            className="mtf-nav-hamburger"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Menü schließen' : 'Menü öffnen'}
+            aria-expanded={menuOpen}
+            style={{
+              background: onGlass ? 'rgba(0,0,0,0.45)' : 'rgba(0,0,0,0.06)',
+              backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+              border: onGlass ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(0,0,0,0.10)',
+              borderRadius: 'var(--radius-xl)',
+              padding: '9px 11px',
+              cursor: 'pointer',
+              color: onGlass ? '#fff' : 'var(--text-strong)',
+              alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            {menuOpen ? (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            )}
+          </button>
         </div>
       </nav>
 
-      {isMobile && menuOpen && (
+      {menuOpen && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 49,
           background: 'rgba(0,0,0,0.94)',
@@ -141,9 +131,18 @@ export function Nav({ onBook }: NavProps) {
           display: 'flex', flexDirection: 'column',
           paddingTop: 'var(--nav-height)',
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', padding: '32px var(--gutter)', gap: 0, flex: 1, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', padding: '32px var(--gutter)', flex: 1, overflowY: 'auto' }}>
             {t.nav.links.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
+              <a key={l.href} href={l.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const id = l.href.slice(1);
+                  setMenuOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById(id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }, 60);
+                }}
                 style={{
                   fontSize: '1.25rem', fontWeight: 'var(--fw-medium)',
                   color: '#fff', textDecoration: 'none',
